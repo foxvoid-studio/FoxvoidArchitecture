@@ -44,3 +44,13 @@ The future-proof layer designed for high-action PvP games requiring sub-50ms rea
 * **Implementation strategy:** Will be developed when lightweight C++ QUIC libraries become accessible for native targets.
 * **Agnostic integration:** Because the ECS network logic relies on `ITransportLayer->Send(payload)`, switching a project from Layer V1 to Layer V2 will only require changing a configuration flag (e.g., `EngineConfig.NetworkProtocol = Protocol::WebTransport`), without altering any gameplay code.
 
+## Engine-Driven deployment pipeline (one-click deploy)
+Instead of relying on external CI/CD servers (e.g., Jenkins, Gitea Actions), the build and deployment pipeline is integrated into the Foxvoid Engine's editor UI.
+* **Workflow:** The developer clicks "Build and Deploy" within the engine GUI.
+* **Execution:** The engine spawns a system subprocess to execute CMake/Ninja build commands for the target platform.
+* **API Integration:** Upon successful compilation, the engine packages the required output files (e.g., wasm, vfs pak, js wrapper, data file) and sends an automated authenticated HTTP POST request to the Foxvoid Studio Django API, updating the cloud database and game distribution center instantly.
+
+## Documentation and knowledge retention
+Given the extreme complexity and context-switching inherent to a solo-developed ecosystem (C++, C#, Python), documentation is maintained close to the code to prevent knowledge loss over time.
+* **Methodology:** Use Architecture Decision Records (ADR). Instead of monolithic design documents, maintain lightweight markdown files in the repository detailing *why* specific architectural choices were made (e.g., Networking protocols, Scripting boundaries) to guide future iterations.
+* **In-Code documentation:** Heavy reliance on clear API contracts and Doxygen/Sphinx-friendly comments for complex algorithmic boundaries (like the SAT physics or ECS data structures).
