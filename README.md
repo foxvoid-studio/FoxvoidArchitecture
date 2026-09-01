@@ -29,3 +29,12 @@ The engine will support multiplayer using an Authoritative Headless Server (comp
 * **`ReplicantComponent`:** Acts as a manifest, dictating which components attached to the entity must be synced.
 * **Hash-Based dirty checking**: To avoid tracking individual variable changes, the engine generates the component's state, hashes it (e.e., CR32/MurmurHash), and compares it against the previous tick's hash. If different, the data is queued for transmission.
 * **Payload serialization**: State is initially generated as JSON, then converted to **MessagePack** (using `nlohmann/json`'s `to_msgpack()`) before transmission to drastically reduce bandwidth footprint.
+
+## Hybrid transport architecture: the agnostic layer
+To support all game genres (from slow-paced management to fast-paced action), Foxvoid Engine utilizes an agnostic network transport layer (`ITransportLayer`). The game developer can select the underlying protocol at project initialization based on the game's latency requirements.
+
+### Layer V1: Websockets (Reliable / TCP)
+The foundation for early multiplayer, asynchronous games, and turn-based logic (e.g., Clickers, Card Games).
+* **Web Target:** Uses the native Emscripten HTML5 WebSocket API (zero overhead).
+* **Desktop/Android Targets:** Uses **IXWebSocket** (lightweight, easy CMake integration).
+* **Constraint:** TCP Head-of-line blocking makes it unsuitable for twitch-action games.
