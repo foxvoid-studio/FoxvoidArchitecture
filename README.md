@@ -38,3 +38,9 @@ The foundation for early multiplayer, asynchronous games, and turn-based logic (
 * **Web Target:** Uses the native Emscripten HTML5 WebSocket API (zero overhead).
 * **Desktop/Android Targets:** Uses **IXWebSocket** (lightweight, easy CMake integration).
 * **Constraint:** TCP Head-of-line blocking makes it unsuitable for twitch-action games.
+
+### Layer V2: WebTransport (Unreliable / QUIC)
+The future-proof layer designed for high-action PvP games requiring sub-50ms reaction times (e.g., Brawlers, Platformers).
+* **Implementation strategy:** Will be developed when lightweight C++ QUIC libraries become accessible for native targets.
+* **Agnostic integration:** Because the ECS network logic relies on `ITransportLayer->Send(payload)`, switching a project from Layer V1 to Layer V2 will only require changing a configuration flag (e.g., `EngineConfig.NetworkProtocol = Protocol::WebTransport`), without altering any gameplay code.
+
